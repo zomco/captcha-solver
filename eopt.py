@@ -6,6 +6,7 @@ import urllib.request
 import urllib3
 import requests
 import datetime
+import sys
 from imutils import paths
 from src.predict_model import predict
 
@@ -142,3 +143,23 @@ def receive(username, password, eopt_dir='tmp/eopt'):
         return eop
     except requests.RequestException as error:
         print('[{}] 请求失败 {}'.format(datetime.datetime.now(), error))
+
+
+if __name__ == '__main__':
+    username = sys.argv[1]
+    password = sys.argv[2]
+    is_success = False
+    print('[{}] [{}] 领取EOPT'.format(datetime.datetime.now(), username))
+    for i in range(10):
+        eop = receive(username=username, password=password)
+        if eop is not None:
+            is_success = True
+            print('[{}] [{}] 领取成功 {}'.format(datetime.datetime.now(), username, eop))
+            break
+        else:
+            print('[{}] [{}] 领取失败，重试 {}'.format(datetime.datetime.now(), username, i + 1))
+    if not is_success:
+        print('[{}] [{}] 领取失败，退出'.format(datetime.datetime.now(), username))
+        sys.exit(1)
+    else:
+        sys.exit(0)
