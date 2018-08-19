@@ -1,5 +1,5 @@
 # captcha-solver
-simple captcha solver base on deep learning
+simple captcha solver, based on https://medium.com/@ageitgey/how-to-break-a-captcha-system-in-15-minutes-with-machine-learning-dbebb035a710
 
 ## Prerequisite
 * Keras
@@ -8,10 +8,19 @@ simple captcha solver base on deep learning
 
 
 ## Usage
-* `python start.py start_generate` generate captchas for training
-* `python start.py start_extract` extract character from generated captchas for training
-* `python start.py start_train` train model
-* `python start.py start_predict -i path/to/captchas` predict model
+
+### Step 1: Generate captcha images
+`python start.py start_generate` 
+
+### Step 2: Extract character images from Step 1
+`python start.py start_extract` 
+
+### Step 3: Train model with character images
+`python start.py start_train`
+
+
+### Step 4: Predict model
+`python start.py start_predict -i path/to/captchas` 
 
 
 ## Notice
