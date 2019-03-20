@@ -12,7 +12,7 @@ from keras.layers.core import Flatten, Dense
 from .helpers import resize_to_fit
 
 
-def train(extract_dir='tmp/extract', label_file='tmp/labels.dat', model_file='tmp/model.hdf5'):
+def train(extract_dir='tmp/extract', label_file='tmp/label.dat', model_file='tmp/model.hdf5'):
     char_ims = []
     labels = []
     for char in paths.list_images(extract_dir):
@@ -46,7 +46,7 @@ def train(extract_dir='tmp/extract', label_file='tmp/labels.dat', model_file='tm
     model.add(Flatten())
     model.add(Dense(500, activation="relu"))
     # 输出层
-    model.add(Dense(31, activation="softmax"))
+    model.add(Dense(34, activation="softmax"))
     # 构造模型并启动训练，将训练结果保存到
     model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
     model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=32, epochs=10, verbose=1)

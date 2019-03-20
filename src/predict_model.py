@@ -10,7 +10,7 @@ import shutil
 from .helpers import box_iou, resize_to_fit
 
 
-def predict(images=[], label_file='tmp/labels.dat', model_file='tmp/model.hdf5', predict_dir='tmp/predict', code_length=4, contour='all'):
+def predict(images=[], label_file='tmp/label.dat', model_file='tmp/model.hdf5', predict_dir='tmp/predict', code_length=4, contour='all'):
     # 加载标签文件和模型文件
     with open(label_file, 'rb') as f:
         lb = pickle.load(f)

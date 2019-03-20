@@ -108,3 +108,7 @@ tmp/
 
 # sensitive
 eopt.sh
+
+# IDE
+.idea/
+.vscode/

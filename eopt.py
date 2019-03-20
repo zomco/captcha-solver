@@ -11,7 +11,7 @@ from imutils import paths
 from src.predict_model import predict
 
 
-def download(eopt_dir='tmp/eopt', total=10000):
+def download(eopt_dir='tmp/eopt', total=10000, n=0):
     '''
     从网站下载验证码样本，样本用于手工打标签
     '''
@@ -21,10 +21,18 @@ def download(eopt_dir='tmp/eopt', total=10000):
         os.makedirs(eopt_dir)
     else:
         os.makedirs(eopt_dir)
-    
-    for i in range(total):
-        urllib.request.urlretrieve('http://www.eoptoken.my/authImage', os.path.join(eopt_dir, '{}.png'.format(i)))
-        print('{}.png 保存到 {} {}/{}'.format(i, eopt_dir, i + 1, total))
+
+    def get_png(start=0):
+        try:
+            for i in range(start, total):
+                urllib.request.urlretrieve('http://www.eoptoken.my/authImage', os.path.join(eopt_dir, '{}.png'.format(i)))
+                print('{}.png 保存到 {} {}/{}'.format(i, eopt_dir, i + 1, total))
+        except Exception:
+            pngs = sorted(os.listdir(eopt_dir), key=lambda x: int(os.path.splitext(x)[0]))
+            index = 0 if len(pngs) == 0 else int(os.path.splitext(pngs[-1])[0])
+            get_png(start=index)
+
+    get_png(start=n)
 
 
 def detect(urls=[], eopt_dir='tmp/eopt'):
@@ -104,7 +112,7 @@ def receive(username, password, eopt_dir='tmp/eopt'):
         r = s.post('https://www.eoptoken.my/action.do', data=form_data)
         rj = r.json()
         if not rj.get('flag'):
-            print('[{}] 领取EOPT请求失败 {}'.format(datetime.datetime.now(), rj.get('msg')))
+            print('[{}] 领取EOPT请求失败 {}, {}'.format(datetime.datetime.now(), rj.get('msg'), codes[0]))
             return None
   
         # EOPT结果
@@ -122,11 +130,11 @@ def receive(username, password, eopt_dir='tmp/eopt'):
         if not rows:
             print('[{}] EOPT结果为空'.format(datetime.datetime.now()))
             return None
-        a_date = datetime.datetime.strptime(rows[0].get('createTime'), '%Y-%m-%d %H:%M:%S').date()
-        b_date = datetime.datetime.now().date()
-        if a_date != b_date:
-            print('[{}] 当天EOPT领取失败'.format(datetime.datetime.now()))
-            return None
+        # a_date = datetime.datetime.strptime(rows[0].get('createTime'), '%Y-%m-%d %H:%M:%S').date()
+        # b_date = datetime.datetime.now().date()
+        # if a_date != b_date:
+        #     print('[{}] 当天EOPT领取失败'.format(datetime.datetime.now()))
+        #     return None
         eop = rows[0].get('eop')
 
         # 退出登录
